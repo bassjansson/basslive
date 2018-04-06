@@ -1,0 +1,4 @@
+{
+    "name": "addon",
+    "main": "./build/Release/addon"
+}
