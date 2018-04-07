@@ -2,7 +2,7 @@
     "name": "basslive-engine",
     "version": "1.0.0",
     "description": "The engine of BassLive, a unique live coding environment.",
-    "author": "Bass Jansson <bassjansson@gmail.com>",
+    "author": "Bass Jansson <bassjansson@gmail.com> (https://bassjansson.com/)",
     "license": "MIT",
     "repository": {
         "type": "git",
