@@ -1,1 +1,6 @@
+# OSX
 .DS_Store
+
+# Node
+/build
+/node_modules

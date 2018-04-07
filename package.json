@@ -1,0 +1,4 @@
+{
+    "name": "bl-engine",
+    "main": "./build/Release/bl_engine"
+}

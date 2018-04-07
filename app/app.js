@@ -1,5 +1,5 @@
-// Require native addon
-const addon = require('../addon');
+// Require basslive engine
+const engine = require('..');
 
 // Prints 'Hello World!'
-console.log(addon.printHelloWorld());
+console.log(engine.printHelloWorld());
