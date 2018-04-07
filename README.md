@@ -7,8 +7,8 @@ In future, the BassLive app will have it's own repository and the engine will be
 
 ## Usage
 
-Build engine: `npm i`<br/>
-Run app: `node app`
+Build engine: `npm install`<br/>
+Run app: `node basslive-app`
 
 ## Taiga
 

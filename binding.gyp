@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "bl_engine",
+      "target_name": "BassLive_Engine",
       "sources": [ "source/main.cpp" ]
     }
   ]
