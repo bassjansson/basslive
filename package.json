@@ -18,8 +18,5 @@
         "signal",
         "buffer"
     ],
-    "main": "build/Release/BassLive_Engine",
-    "scripts": {
-        "test": "npm install && cd basslive-app && npm test"
-    }
+    "main": "build/Release/BassLive_Engine"
 }

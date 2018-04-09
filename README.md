@@ -2,12 +2,7 @@
 
 The new BassLive engine running on [Node.js](https://nodejs.org/) together with [PortAudio](http://www.portaudio.com/)!
 
-Currently, this repository also includes the new BassLive app.<br/>
-In future, the BassLive app will have it's own repository and the engine will be available via [npm](https://www.npmjs.com/).
-
-## Usage
-
-Simply run: `npm test`
+The BassLive [app](https://github.com/bassjansson/basslive-app) uses this engine.
 
 ## Taiga
 
