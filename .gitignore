@@ -2,5 +2,5 @@
 .DS_Store
 
 # Node
+/bin
 /build
-/node_modules
