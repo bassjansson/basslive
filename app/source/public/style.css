@@ -1,0 +1,10 @@
+/* Main */
+
+body {
+    color: white;
+    background-color: black;
+    text-align: center;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}

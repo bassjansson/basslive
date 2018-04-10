@@ -2,14 +2,21 @@
 <html>
 
     <head>
+        <!-- Meta Data -->
         <meta charset="UTF-8">
-        <title>Hello World!</title>
+
+        <!-- Title -->
+        <title>Host Page</title>
+
+        <!-- Style Sheets -->
+        <link rel="stylesheet" href="public/style.css">
+
+        <!-- Libraries -->
     </head>
 
     <body>
-        <h1>Hello World!</h1>
-
-        <!-- All of the Node.js APIs are available in this renderer process. -->
+        <!-- Content -->
+        <h1>Host Page</h1>
 
         We are using Node.js
         <script>document.write(process.versions.node)</script>, Chromium
@@ -17,10 +24,8 @@
         <script>document.write(process.versions.electron)</script>.
         <br/><br/>
 
-        <script>
-            // You can also require other files to run in this process
-            require('./renderer.js')
-        </script>
+        <!-- Scripts -->
+        <script src="index.js"></script>
     </body>
 
 </html>
