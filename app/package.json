@@ -1,0 +1,34 @@
+{
+    "name": "basslive-app",
+    "version": "1.0.0",
+    "description": "The BassLive app, a unique live coding music app.",
+    "author": "Bass Jansson <bassjansson@gmail.com> (https://bassjansson.com/)",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/bassjansson/basslive"
+    },
+    "keywords": [
+        "audio",
+        "dsp",
+        "processing",
+        "portaudio",
+        "sound",
+        "synth",
+        "signal",
+        "buffer"
+    ],
+    "main": "source/main.js",
+    "scripts": {
+        "start": "electron .",
+        "test": "npm run rebuild-engine && npm start",
+        "rebuild-engine": "electron-rebuild -f -w basslive-engine"
+    },
+    "dependencies": {
+        "basslive-engine": "file:../engine"
+    },
+    "devDependencies": {
+        "electron": "^1.8.4",
+        "electron-rebuild": "^1.7.3"
+    }
+}
