@@ -25,7 +25,9 @@
         "rebuild-engine": "electron-rebuild -f -w basslive-engine"
     },
     "dependencies": {
-        "basslive-engine": "file:../engine"
+        "basslive-engine": "file:../engine",
+        "express": "^4.16.3",
+        "socket.io": "^2.1.0"
     },
     "devDependencies": {
         "electron": "^1.8.4",
