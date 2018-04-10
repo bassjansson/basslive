@@ -1,12 +1,12 @@
 {
     "name": "basslive-engine",
     "version": "1.0.0",
-    "description": "The engine of BassLive, a unique live coding environment.",
+    "description": "The BassLive engine, a unique audio processing engine.",
     "author": "Bass Jansson <bassjansson@gmail.com> (https://bassjansson.com/)",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/bassjansson/basslive-engine"
+        "url": "https://github.com/bassjansson/basslive"
     },
     "keywords": [
         "audio",
