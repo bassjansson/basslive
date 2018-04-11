@@ -4,7 +4,8 @@ BassLive, a unique live coding environment running on [Node.js](https://nodejs.o
 
 ## Usage
 
-To run the app, see the [app](https://github.com/bassjansson/basslive/tree/master/app) directory.
+* Install: `npm install`
+* Test: `npm test`
 
 ## Taiga
 
