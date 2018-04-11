@@ -1,3 +1,5 @@
+'use strict'
+
 /*
  *  Loads specific host and/or client scripts.
  */
