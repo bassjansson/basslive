@@ -1,7 +1,7 @@
 {
-    "name": "basslive-app",
+    "name": "basslive",
     "version": "1.0.0",
-    "description": "The BassLive app, a unique live coding music app.",
+    "description": "BassLive, a unique live coding environment.",
     "author": "Bass Jansson <bassjansson@gmail.com> (https://bassjansson.com/)",
     "license": "MIT",
     "repository": {
@@ -12,7 +12,6 @@
         "audio",
         "dsp",
         "processing",
-        "portaudio",
         "sound",
         "synth",
         "signal",
@@ -28,6 +27,6 @@
     },
     "devDependencies": {
         "electron": "^1.8.4",
-        "electron-rebuild": "^1.7.3"
+        "emscripten-download": "^1.0.1"
     }
 }
