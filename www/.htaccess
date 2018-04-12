@@ -1,0 +1,19 @@
+# Prevent Apache from serving .htaccess files
+<FilesMatch "^\.htaccess">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Rewriting
+RewriteEngine On
+
+# Rewrite any www URL to non-www with https
+RewriteCond %{HTTP_HOST} ^(www\.)(.*) [NC]
+RewriteRule (.*) https://%2%{REQUEST_URI} [L,R=301]
+
+# Rewrite any non-https URL to https
+RewriteCond %{HTTPS} off
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Enable HSTS
+Header set Strict-Transport-Security "max-age=31536000" env=HTTPS
