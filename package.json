@@ -19,8 +19,10 @@
     ],
     "scripts": {
         "start": "npm run desktop",
+        "test": "npm run build-engine && npm start",
         "desktop": "electron electron/main.js",
-        "server": "node express/main.js"
+        "server": "node express/main.js",
+        "build-engine": "cd engine && ./build.sh"
     },
     "dependencies": {
         "electron": "^1.8.4",

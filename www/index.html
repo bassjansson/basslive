@@ -18,11 +18,8 @@
         BassLive, a unique live coding environment.
 
         <!-- Scripts -->
-        <script src="wasm-loader.js"></script>
-        <script>
-            loadWebAssembly('engine.wasm').then(result =>
-                console.log("Square of 12: ", result.instance.exports._square(12)))
-        </script>
+        <script src="engine.js"></script>
+        <script src="main.js"></script>
     </body>
 
 </html>
