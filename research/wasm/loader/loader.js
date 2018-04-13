@@ -1,6 +1,6 @@
 // Loads the specified .wasm file
-// Optional imports as second argument
-// Returns a WebAssembly.Instance
+// Optional module imports as second argument
+// Returns a promise that resolves to a WebAssembly.Instance
 function loadWebAssembly(filename, imports = {})
 {
     // Alert and return if we don't have WebAssembly support
@@ -16,21 +16,7 @@ function loadWebAssembly(filename, imports = {})
         require('electron').webFrame.registerURLSchemeAsPrivileged('file')
     }
 
-    // Try to compile the file stream directly from the server
-    try
-    {
-        return WebAssembly.instantiateStreaming(fetch(filename),
-        {
-            imports
-        })
-    }
-    catch (error)
-    {
-        console.warn('[loadWebAssembly] WebAssembly.instantiateStreaming() failed, \
-falling back to WebAssembly.compile() and WebAssembly.Instance().')
-    }
-
-    // Otherwise, stream the file first and compile it afterwards
+    // Fetch, compile and instanciate the WebAssembly module
     return fetch(filename)
         .then(response => response.arrayBuffer())
         .then(buffer => WebAssembly.compile(buffer))
@@ -56,9 +42,6 @@ falling back to WebAssembly.compile() and WebAssembly.Instance().')
                 })
             })
 
-            return {
-                module: module,
-                instance: new WebAssembly.Instance(module, imports)
-            }
+            return new WebAssembly.Instance(module, imports)
         })
 }

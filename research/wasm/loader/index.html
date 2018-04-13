@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <!-- Meta Data -->
+        <meta charset="UTF-8">
+
+        <!-- Title -->
+        <title>WebAssembly Loader Test</title>
+    </head>
+
+    <body>
+        <!-- Content -->
+        <h1>WebAssembly Loader Test</h1>
+
+        <!-- Scripts -->
+        <script src="loader.js"></script>
+        <script>
+            loadWebAssembly('square.wasm').then(instance =>
+                document.body.innerHTML += "Square of 12: " + instance.exports._square(12))
+        </script>
+    </body>
+
+</html>
