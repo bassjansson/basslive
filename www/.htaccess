@@ -4,16 +4,22 @@
     Deny from all
 </FilesMatch>
 
-# Rewriting
+# Enable RewriteEngine
 RewriteEngine On
 
-# Rewrite any www URL to non-www with https
+# Rewrite any www URL to non-www with HTTPS
 RewriteCond %{HTTP_HOST} ^(www\.)(.*) [NC]
 RewriteRule (.*) https://%2%{REQUEST_URI} [L,R=301]
 
-# Rewrite any non-https URL to https
+# Rewrite any non-HTTPS URL to HTTPS
 RewriteCond %{HTTPS} off
 RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # Enable HSTS
 Header set Strict-Transport-Security "max-age=31536000" env=HTTPS
+
+# Set MIME type of WebAssembly
+AddType application/wasm .wasm
+
+# Make sure that gzip is enabled
+AddOutputFilterByType DEFLATE application/wasm
