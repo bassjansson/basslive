@@ -17,16 +17,17 @@
         "signal",
         "buffer"
     ],
-    "main": "electron/main.js",
     "scripts": {
-        "start": "electron ."
+        "start": "npm run desktop",
+        "desktop": "electron electron/main.js",
+        "server": "node express/main.js"
     },
     "dependencies": {
+        "electron": "^1.8.4",
         "express": "^4.16.3",
         "socket.io": "^2.1.0"
     },
     "devDependencies": {
-        "electron": "^1.8.4",
         "emscripten-download": "^1.0.1"
     }
 }
