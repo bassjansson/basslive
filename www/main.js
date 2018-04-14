@@ -1,64 +1,118 @@
-Engine.onRuntimeInitialized = () =>
+// Audio buffer constants
+const BUFFER_SIZE = 256
+const INPUT_CHANNEL_COUNT = 2
+const OUTPUT_CHANNEL_COUNT = 2
+
+// Audio buffers
+let inputAudioBuffer
+let outputAudioBuffer
+
+// Create an AudioContext
+let audioContext = new AudioContext()
+
+// Create a ScriptProcessorNode
+let scriptProcessorNode = audioContext.createScriptProcessor(
+    BUFFER_SIZE, INPUT_CHANNEL_COUNT, OUTPUT_CHANNEL_COUNT)
+
+// Create a MediaStreamSource
+let microphoneNode
+
+function initMicrophoneNode()
+{
+    navigator.mediaDevices.enumerateDevices()
+        .then(devices => console.log("Media devices: ", devices))
+        .catch(error => console.log("Media devices error: ", error))
+
+    navigator.getUserMedia =
+        navigator.getUserMedia ||
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia
+
+    navigator.getUserMedia(
+        {
+            audio: true,
+            video: false
+        },
+        (stream) =>
+        {
+            microphoneNode = audioContext.createMediaStreamSource(stream)
+            microphoneNode.connect(scriptProcessorNode)
+        },
+        (error) =>
+        {
+            console.log("navigator.getUserMedia() failed!")
+            console.log(error)
+        })
+}
+initMicrophoneNode()
+
+// Initialize audio processing
+Module.onRuntimeInitialized = function()
 {
     console.log('Engine loaded!')
 
+    // Initialize engine
+    Module._initializeEngine()
 
-    // Audio buffer constants
-    const INPUT_CHANNELS = 3
-    const OUTPUT_CHANNELS = 2
-    const BUFFER_SIZE = 8
-    const BYTES_PER_SAMPLE = Float32Array.BYTES_PER_ELEMENT
-
-
-    // Create dummy audio buffers
-    let inputBuffers = [
-        new Float32Array(BUFFER_SIZE).fill(3),
-        new Float32Array(BUFFER_SIZE).fill(7),
-        new Float32Array(BUFFER_SIZE).fill(11)
-    ]
-    let outputBuffers = [
-        new Float32Array(BUFFER_SIZE).fill(0),
-        new Float32Array(BUFFER_SIZE).fill(0)
-    ]
-
-
-    // Allocate memory on the emscripten heap
-    let inputBuffersPtr = Module._malloc(INPUT_CHANNELS * BUFFER_SIZE * BYTES_PER_SAMPLE)
-    let outputBuffersPtr = Module._malloc(OUTPUT_CHANNELS * BUFFER_SIZE * BYTES_PER_SAMPLE)
-
-
-    // Call our main audio callback
-    function onaudioprocess(inputBuffers, outputBuffers)
+    // Function to allocate audio buffers on the emscripten heap
+    function allocateAudioBufferOnHeap(channelCount, bufferSize)
     {
-        // Copy our input audio buffers to the heap
-        Module.HEAPF32.set(inputBuffers[0], inputBuffersPtr / BYTES_PER_SAMPLE)
-        Module.HEAPF32.set(inputBuffers[1], inputBuffersPtr / BYTES_PER_SAMPLE + BUFFER_SIZE)
-        Module.HEAPF32.set(inputBuffers[2], inputBuffersPtr / BYTES_PER_SAMPLE + BUFFER_SIZE * 2)
+        let heapBufferPointer = Module._malloc(channelCount * bufferSize * Module.HEAPF32.BYTES_PER_ELEMENT)
+        let audioBufferOnHeap = Array(channelCount).fill(null)
 
-        // Call our audio callback function
-        Module._mainAudioCallback(
-            inputBuffersPtr,
-            outputBuffersPtr,
-            INPUT_CHANNELS,
-            OUTPUT_CHANNELS,
-            BUFFER_SIZE)
+        audioBufferOnHeap.reduce((pointer, item, index) =>
+            {
+                audioBufferOnHeap[index] = Module.HEAPF32.subarray(pointer, pointer + bufferSize)
+                return pointer + bufferSize
+            },
+            heapBufferPointer / Module.HEAPF32.BYTES_PER_ELEMENT)
 
-        // Copy our output audio buffers from the heap
-        outputBuffers[0].set(Module.HEAPF32.subarray(
-            outputBuffersPtr / BYTES_PER_SAMPLE,
-            outputBuffersPtr / BYTES_PER_SAMPLE + BUFFER_SIZE), 0)
-
-        outputBuffers[1].set(Module.HEAPF32.subarray(
-            outputBuffersPtr / BYTES_PER_SAMPLE + BUFFER_SIZE,
-            outputBuffersPtr / BYTES_PER_SAMPLE + BUFFER_SIZE * 2), 0)
+        return {
+            pointer: heapBufferPointer,
+            buffer: audioBufferOnHeap
+        }
     }
 
-    console.log("Output buffers before processing: ", outputBuffers.toString())
-    onaudioprocess(inputBuffers, outputBuffers)
-    console.log("Output buffers after processing: ", outputBuffers.toString())
+    // Allocate audio buffers on the emscripten heap
+    inputAudioBuffer = allocateAudioBufferOnHeap(INPUT_CHANNEL_COUNT, BUFFER_SIZE)
+    outputAudioBuffer = allocateAudioBufferOnHeap(OUTPUT_CHANNEL_COUNT, BUFFER_SIZE)
 
+    // Register on audio process callback
+    scriptProcessorNode.onaudioprocess = function(audioProcessingEvent)
+    {
+        // Copy event input buffer to input buffer on heap
+        for (channel = 0; channel < INPUT_CHANNEL_COUNT; ++channel)
+            audioProcessingEvent.inputBuffer.copyFromChannel(inputAudioBuffer.buffer[channel], channel)
 
-    // Free our buffer memory
-    Module._free(inputBuffersPtr)
-    Module._free(outputBuffersPtr)
+        // Call main audio processing callback
+        Module._mainAudioCallback(
+            inputAudioBuffer.pointer,
+            outputAudioBuffer.pointer,
+            INPUT_CHANNEL_COUNT,
+            OUTPUT_CHANNEL_COUNT,
+            BUFFER_SIZE)
+
+        // Copy output buffer on heap to event output buffer
+        for (channel = 0; channel < OUTPUT_CHANNEL_COUNT; ++channel)
+            audioProcessingEvent.outputBuffer.copyToChannel(outputAudioBuffer.buffer[channel], channel)
+    }
+
+    // Connect audio nodes
+    scriptProcessorNode.connect(audioContext.destination)
+}
+
+// Terminate audio processing
+window.onbeforeunload = function()
+{
+    // Disconnect audio nodes
+    microphoneNode.disconnect(scriptProcessorNode)
+    scriptProcessorNode.disconnect(audioContext.destination)
+
+    // Free our audio buffer memory
+    Module._free(inputAudioBuffer.pointer)
+    Module._free(outputAudioBuffer.pointer)
+
+    // Terminate engine
+    Module._terminateEngine()
 }
